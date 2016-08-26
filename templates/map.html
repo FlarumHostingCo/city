@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="{{lang}}">
+  <head>
+    <meta charset="utf-8">
+    <title>Pokémon Go Adventures Map</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+
+
+
+  <meta property="og:site_name" content="Pokémon Trainer Adventures Map" />
+  
+  <meta property="og:image" content="https://imgs.pokemongomap.host/pokemongoadventures.og.png" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="www.poketrainerhq.com" />
+  <meta property="og:title" content="Pokémon Trainer Adventures Map" />
+  <meta property="og:description" content="Live interactive Pokémon Go map featuring on the fly spawn locations, nests, gym team ownership and much more!" />
+ 
+ <meta property="fb:app_id" content="743202575782365" />
+ 
+
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Pokemon Adventures">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#3b3b3b">
+    <!-- Fav- & Apple-Touch-Icons -->
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="https://imgs.pokemongomap.host/favicon.ico" type="image/x-icon">
+    <!-- non-retina iPhone pre iOS 7 -->
+    <link rel="apple-touch-icon" href="https://imgs.pokemongomap.host/57x57.png" sizes="57x57">
+    <!-- non-retina iPad pre iOS 7 -->
+    <link rel="apple-touch-icon" href="https://imgs.pokemongomap.host/72x72.png" sizes="72x72">
+    <!-- non-retina iPad iOS 7 -->
+    <link rel="apple-touch-icon" href="https://imgs.pokemongomap.host/76x76.png" sizes="76x76">
+    <!-- retina iPhone pre iOS 7 -->
+    <link rel="apple-touch-icon" href="https://imgs.pokemongomap.host/114x114.png" sizes="114x114">
+    <!-- retina iPhone iOS 7 -->
+    <link rel="apple-touch-icon" href="https://imgs.pokemongomap.host/120x120.png" sizes="120x120">
+    <!-- retina iPad pre iOS 7 -->
+    <link rel="apple-touch-icon" href="https://imgs.pokemongomap.host/144x144.png" sizes="144x144">
+    <!-- retina iPad iOS 7 -->
+    <link rel="apple-touch-icon" href="https://imgs.pokemongomap.host/152x152.png" sizes="152x152">
+    <!-- retina iPhone 6 iOS 7 -->
+    <link rel="apple-touch-icon" href="https://imgs.pokemongomap.host/180x180.png" sizes="180x180">
+    <link rel="stylesheet" href="static/dist/css/app.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.css">
+    <script src="static/js/vendor/modernizr.custom.js"></script>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-6768180095376011",
+    enable_page_level_ads: true
+  });
+</script>
+
+  </head>
+  <body id="top">
+
+  <script>
+  function NotInPokeMapFrame() {
+    return top === self;
+}
+function ReferrerIsPokeMapApp() {
+    if(document.referrer) {
+        return document.referrer.indexOf("poketrainerhq.com") != -1;
+    }
+    return false;
+}
+if (NotInPokeMapFrame()) {
+    /* replace with your own app namespace */
+    top.location.replace("http://www.poketrainerhq.com");
+}
+</script>
+
+  <div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.7&appId=743202575782365";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+    <div class="wrapper">
+
+
+
+      <!-- Header -->
+      <header id="header">
+     <!--   <a href="http://www.poketrainerhq.com"><img border="0" src="https://imgs.pokemongomap.host/poketrainerhq-small.png"></a> -->
+        <a href="#nav" id="statsToggle" class="statsNav"><span class="label">Map Options</span></a>
+        <a href="https://www.paypal.me/PokeTrainerHQ" target="_blank"><span class="label">Donate To Help Support The Site</span></a>
+         <!--   <a href="http://www.poketrainerhq.com/forums/" target="_blank"><span class="label">Community Forums</span></a> -->
+        <a href="https://www.facebook.com/PokeTrainerHQ" target="_blank"><span class="label">Like Us On Facebook</span></a>
+        <a href="https://www.twitter.com/PokeTrainerHQ" target="_blank"><span class="label">Follow Us On Twitter</span></a>
+        <a href="https://paypal.me/PokeTrainerHQ" target="_blank">Donate Now!</a>
+     <!--   <a href="http://www.poketrainerhq.com/forums/" target="_blank"><span class="label">Community Forums</span></a> -->
+
+
+     <!--  <a href="#history" id="historyToggle" class="historyNav""><span class="label">History</span></a>
+         
+
+  <a href="#stats" id="statsToggle" class="statsNav"><span class="label">Stats</span></a>  -->
+
+
+      </header>
+      <!-- NAV -->
+      <nav id="nav">
+            <div>
+      <center>
+      <h3>Please Help Support Our Map</h3>
+      <a href="https://www.paypal.me/PokeTrainerHQ" target="_blank"><img border="0" src="https://imgs.pokemongomap.host/donate-paypal.png"></a>
+      </center>
+      <br>
+      </div>
+        <div id="nav-accordion">
+          <h3>Marker Settings</h3>
+          <div>
+            <div class="form-control switch-container">
+              <h3>Pokémon</h3>
+              <div class="onoffswitch">
+                <input id="pokemon-switch" type="checkbox" name="pokemon-switch" class="onoffswitch-checkbox" checked>
+                <label class="onoffswitch-label" for="pokemon-switch">
+                <span class="switch-label" data-on="On" data-off="Off"></span>
+                <span class="switch-handle"></span>
+                </label>
+              </div>
+            </div>
+            <div class="form-control switch-container">
+              <h3>Gyms</h3>
+              <div class="onoffswitch">
+                <input id="gyms-switch" type="checkbox" name="gyms-switch" class="onoffswitch-checkbox" checked>
+                <label class="onoffswitch-label" for="gyms-switch">
+                <span class="switch-label" data-on="On" data-off="Off"></span>
+                <span class="switch-handle"></span>
+                </label>
+              </div>
+            </div>
+
+            <!--  #enable for debug
+            <div class="form-control switch-container">
+              <h3>Scanned Locations</h3>
+              <div class="onoffswitch">
+                <input id="scanned-switch" type="checkbox" name="scanned-switch" class="onoffswitch-checkbox">
+                <label class="onoffswitch-label" for="scanned-switch">
+                <span class="switch-label" data-on="On" data-off="Off"></span>
+                <span class="switch-handle"></span>
+                </label>
+              </div>
+            </div>
+            -->
+     
+            <div class="form-control">
+              <label for="exclude-pokemon">
+              <h3>Hide Pokémon</h3>
+              <div style="max-height:165px;overflow-y:auto">
+                <select id="exclude-pokemon" multiple="multiple"></select>
+              </div>
+              </label>
+            </div>
+          </div>
+
+
+
+          <h3>Notification Settings</h3>
+          <div>
+            <div class="form-control">
+              <label for="notify-pokemon">
+                <h3>Notify of Pokémon</h3>
+                <div style="max-height:165px;overflow-y:auto">
+                  <select id="notify-pokemon" multiple="multiple"></select>
+                </div>
+              </label>
+            </div>
+            <div class="form-control">
+              <label for="notify-rarity">
+                <h3>Notify of Rarity</h3>
+                <div style="max-height:165px;overflow-y:auto">
+                  <select id="notify-rarity" multiple="multiple"></select>
+                </div>
+              </label>
+            </div>
+            <div class="form-control switch-container">
+              <h3>Notify with sound</h3>
+              <div class="onoffswitch">
+                <input id="sound-switch" type="checkbox" name="sound-switch" class="onoffswitch-checkbox" checked>
+                <label class="onoffswitch-label" for="sound-switch">
+                <span class="switch-label" data-on="On" data-off="Off"></span>
+                <span class="switch-handle"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <h3>Style Settings</h3>
+          <div>
+            <div class="form-control switch-container">
+              <h3>Map Style</h3>
+              <select id="map-style"></select>
+            </div>
+            <div class="form-control switch-container">
+              <h3>Icons</h3>
+              <select name="pokemon-icons" id="pokemon-icons"></select>
+            </div>
+            <div class="form-control switch-container">
+              <h3>Icon Size</h3>
+              <select name="pokemon-icon-size" id="pokemon-icon-size">
+                <option value="-8">Small</option>
+                <option value="0">Normal</option>
+                <option value="10">Large</option>
+                <option value="20">X-Large</option>
+              </select>
+            </div>
+ 
+        </div>
+
+         <br>
+        <center>
+        <div class="fb-page" data-href="https://www.facebook.com/PokeTrainerHQ/" data-width="250" data-height="250" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"><blockquote cite="https://www.facebook.com/PokeTrainerHQ/" class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/PokeTrainerHQ/">PokéTrainerHQ</a></blockquote></div>
+        <br>
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- bottom of menu -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:300px;height:250px"
+     data-ad-client="ca-pub-6768180095376011"
+     data-ad-slot="6494347254"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<br><br><br>
+</center>
+<br><br><br>
+</div>
+      </nav>
+      <nav id="stats">
+        <div class="switch-container">
+          <div class="switch-container">
+            <center><h1 id="stats-pkmn-label">Loading...</h1></center>
+          </div>
+          <div id="pokemonList" style="color: black;"></div>
+          <div><a href="stats">Full Stats</a></div>
+          <div class="switch-container">
+            <center><h1 id="stats-gym-label"></h1></center>
+          </div>
+          <div id="arenaList" style="color: black;"></div>
+          <div class="switch-container">
+            <center><h1 id="stats-pkstop-label"></h1></center>
+          </div>
+          <div id="pokestopList" style="color: black;"></div>
+        </div>
+      </nav>
+
+             <div id="adBottom"> 
+
+          <script type="text/javascript">
+            google_ad_client = "ca-pub-6768180095376011";
+            width = document.documentElement.clientWidth;
+            /* Thread List Below Stickies Responsive 2 */
+            google_ad_slot = "1791619256";
+            google_ad_width = 320;
+            google_ad_height = 50;
+                if (width > 483) {
+                /* Thread List Below Stickies Responsive 1 */
+                google_ad_slot = "1791619256";
+                google_ad_width = 468;
+                google_ad_height = 60;
+                }
+                    if (width > 743) {
+                    /* Thread List Below Stickies */
+                    google_ad_slot = "1791619256";
+                    google_ad_width = 728;
+                    google_ad_height = 90;
+                    }
+            </script>
+            <script type="text/javascript"
+            src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+            </script>
+
+
+   </div>
+      <div id="map"></div>
+    </div>
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.9.1/polyfill.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/skel/3.0.1/skel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+    <script src="{{ url_for('static', filename='dist/js/app.min.js').lstrip('/') }}"></script>
+    <script src="{{ url_for('static', filename='js/vendor/classie.js').lstrip('/') }}"></script>
+    <script>
+      var centerLat = {{lat}};
+      var centerLng = {{lng}};
+    </script>
+    <script src="{{ url_for('static', filename='dist/js/map.min.js').lstrip('/') }}"></script>
+    <script src="{{ url_for('static', filename='dist/js/stats.min.js').lstrip('/') }}"></script>
+    <script defer src="https://maps.googleapis.com/maps/api/js?key={{ gmaps_key }}&amp;callback=initMap&amp;libraries=places,geometry"></script>
+  </body>
+</html>
