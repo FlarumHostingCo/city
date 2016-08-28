@@ -839,6 +839,10 @@ function initMap () { // eslint-disable-line no-unused-vars
     zoom: Store.get('zoomLevel'),
     fullscreenControl: true,
     disableDoubleClickZoom: true,
+    zoomControl: true,
+    zoomControlOptions: {
+        position: google.maps.ControlPosition.LEFT_CENTER
+    },
     streetViewControl: false,
     mapTypeControl: false,
     mapTypeControlOptions: {

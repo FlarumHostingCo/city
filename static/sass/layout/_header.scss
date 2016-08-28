@@ -11,12 +11,21 @@
     height: 320px;
 }
 
+#adBottom {
+left: -1px;
+position: fixed;
+text-align:left;
+bottom: -10px;
+width:100%;
+z-index:999;
+}
+
 #adTop {
 left:0;
 position: fixed;
 text-align:right;
-top: 0px;
-width:100%;
+margin-top: 50px;
+width:25%;
 z-index:999;
 }
 
