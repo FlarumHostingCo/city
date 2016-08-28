@@ -17,7 +17,7 @@ var i8lnDictionary = {}
 var languageLookups = 0
 var languageLookupThreshold = 3
 
-var searchMarkerStyles
+//var searchMarkerStyles
 
 var excludedPokemon = []
 var notifiedPokemon = []
@@ -770,10 +770,6 @@ var StoreOptions = {
     default: 0,
     type: StoreTypes.Number
   },
-  'searchMarkerStyle': {
-    default: 'pokesition',
-    type: StoreTypes.String
-  },
   'zoomLevel': {
     default: 16,
     type: StoreTypes.Number
@@ -921,6 +917,7 @@ function initMap () { // eslint-disable-line no-unused-vars
   initSidebar()
 }
 
+/* 
 function updateSearchMarker (style) {
   if (style in searchMarkerStyles) {
     searchMarker.setIcon(searchMarkerStyles[style].icon)
@@ -964,6 +961,8 @@ function createSearchMarker () {
   return searchMarker
 }
 
+*/
+
 var searchControlURI = 'search_control'
 function searchControl (action) {
   $.post(searchControlURI + '?action=' + encodeURIComponent(action))
@@ -986,6 +985,8 @@ function initSidebar () {
   $('#scanned-switch').prop('checked', Store.get('showScanned'))
   $('#spawnpoints-switch').prop('checked', Store.get('showSpawnpoints'))
   $('#sound-switch').prop('checked', Store.get('playSound'))
+  
+/*
   var searchBox = new google.maps.places.SearchBox(document.getElementById('next-location'))
   $('#next-location').css('background-color', $('#geoloc-switch').prop('checked') ? '#e0e0e0' : '#ffffff')
 
@@ -1002,6 +1003,7 @@ function initSidebar () {
     var loc = places[0].geometry.location
     changeLocation(loc.lat(), loc.lng())
   })
+  */
 
   var icons = $('#pokemon-icons')
   $.each(pokemonSprites, function (key, value) {
@@ -1926,7 +1928,7 @@ $(function () {
 
   $selectSearchIconMarker = $('#iconmarker-style')
 
-  $.getJSON('static/dist/data/searchmarkerstyle.min.json').done(function (data) {
+ /* $.getJSON('static/dist/data/searchmarkerstyle.min.json').done(function (data) {
     searchMarkerStyles = data
     var searchMarkerStyleList = []
 
@@ -1936,6 +1938,8 @@ $(function () {
         text: value.name
       })
     })
+
+    
 
     $selectSearchIconMarker.select2({
       placeholder: 'Select Icon Marker',
@@ -1949,10 +1953,10 @@ $(function () {
       updateSearchMarker(selectSearchIconMarker)
     })
 
-    $selectSearchIconMarker.val(Store.get('searchMarkerStyle')).trigger('change')
+   $selectSearchIconMarker.val(Store.get('searchMarkerStyle')).trigger('change')
 
-    updateSearchMarker(Store.get('lockMarker'))
-  })
+   updateSearchMarker(Store.get('lockMarker'))
+  })   */
 })
 
 $(function () {
