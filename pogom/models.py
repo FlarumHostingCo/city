@@ -26,7 +26,7 @@ log = logging.getLogger(__name__)
 args = get_args()
 flaskDb = FlaskDB()
 
-db_schema_version = 6
+db_schema_version = 8
 
 
 class MyRetryDB(RetryOperationalError, PooledMySQLDatabase):
@@ -74,7 +74,8 @@ class Pokemon(BaseModel):
     # We are base64 encoding the ids delivered by the api
     # because they are too big for sqlite to handle
     encounter_id = CharField(primary_key=True, max_length=50)
-    spawnpoint_id = CharField(index=True)
+    spawnpoint_id = CharField(index=True, null=True)
+    pokestop_id = CharField(null=True)
     pokemon_id = IntegerField(index=True)
     latitude = DoubleField()
     longitude = DoubleField()
@@ -224,7 +225,12 @@ class Pokemon(BaseModel):
 
     @classmethod
     def get_spawnpoints(cls, southBoundary, westBoundary, northBoundary, eastBoundary):
-        query = Pokemon.select(Pokemon.latitude, Pokemon.longitude, Pokemon.spawnpoint_id)
+        query = (Pokemon.select(Pokemon.latitude,
+                                Pokemon.longitude,
+                                Pokemon.spawnpoint_id,
+                                ((Pokemon.disappear_time.minute * 60) + Pokemon.disappear_time.second).alias('time'),
+                                fn.Count(Pokemon.spawnpoint_id).alias('count'))
+                 .where(Pokemon.spawnpoint_id.is_null(False)))
 
         if None not in (northBoundary, southBoundary, westBoundary, eastBoundary):
             query = (query
@@ -433,6 +439,38 @@ class ScannedLocation(BaseModel):
                  .dicts())
 
         return list(query)
+class MainWorker(BaseModel):
+    worker_name = CharField(primary_key=True, max_length=50)
+    message = CharField()
+    method = CharField(max_length=50)
+    last_modified = DateTimeField(index=True)
+
+
+class WorkerStatus(BaseModel):
+    username = CharField(primary_key=True, max_length=50)
+    worker_name = CharField()
+    success = IntegerField()
+    fail = IntegerField()
+    no_items = IntegerField()
+    skip = IntegerField()
+    last_modified = DateTimeField(index=True)
+    message = CharField(max_length=255)
+
+    @staticmethod
+    def get_recent():
+        query = (WorkerStatus
+                 .select()
+                 .where((WorkerStatus.last_modified >=
+                        (datetime.utcnow() - timedelta(minutes=5))))
+                 .order_by(WorkerStatus.username)
+                 .dicts())
+
+        status = []
+        for s in query:
+            status.append(s)
+
+        return status
+
 
 
 class Versions(flaskDb.Model):
@@ -490,6 +528,9 @@ def construct_pokemon_dict(pokemons, p, encounter_result, d_t):
     pokemons[p['encounter_id']] = {
         'encounter_id': b64encode(str(p['encounter_id'])),
         'spawnpoint_id': p['spawn_point_id'],
+        # Lured and non-lured pokemon both go into the `pokemons` collection
+        # to be upserted, so we need to keep their columns the same
+        'pokestop_id': None,
         'pokemon_id': p['pokemon_data']['pokemon_id'],
         'latitude': p['latitude'],
         'longitude': p['longitude'],
@@ -562,6 +603,7 @@ def parse_map(api, args, map_dict, step_location, db_update_queue, wh_update_que
         for f in cell.get('forts', []):
             if config['parse_pokestops'] and f.get('type') == 1:  # Pokestops
                 if 'active_fort_modifier' in f:
+                    lure_info = f.get('lure_info')
                     lure_expiration = datetime.utcfromtimestamp(
                         f['last_modified_timestamp_ms'] / 1000.0) + timedelta(minutes=30)
                     active_fort_modifier = f['active_fort_modifier']
@@ -575,6 +617,20 @@ def parse_map(api, args, map_dict, step_location, db_update_queue, wh_update_que
                             'lure_expiration': calendar.timegm(lure_expiration.timetuple()),
                             'active_fort_modifier': active_fort_modifier
                         }))
+
+                    if lure_info is not None and config['parse_pokemon']:
+                        d_t = datetime.utcfromtimestamp(lure_info['lure_expires_timestamp_ms'] / 1000)
+                        pokemons[lure_info['encounter_id']] = {
+                            'encounter_id': b64encode(str(lure_info['encounter_id'])),
+                            # Lured and non-lured pokemon both go into the `pokemons` collection
+                            # to be upserted, so we need to keep their columns the same
+                            'spawnpoint_id': None,
+                            'pokestop_id': b64encode(str(f['id'])),
+                            'pokemon_id': lure_info['active_pokemon_id'],
+                            'latitude': f['latitude'],
+                            'longitude': f['longitude'],
+                            'disappear_time': d_t
+                        }    
                 else:
                     lure_expiration, active_fort_modifier = None, None
 
@@ -812,7 +868,19 @@ def clean_db_loop(args):
             query = (ScannedLocation
                      .delete()
                      .where((ScannedLocation.last_modified <
-                            (datetime.utcnow() - timedelta(minutes=30)))))
+                             (datetime.utcnow() - timedelta(minutes=30)))))
+            query.execute()
+
+            query = (MainWorker
+                     .delete()
+                     .where((ScannedLocation.last_modified <
+                             (datetime.utcnow() - timedelta(minutes=30)))))
+            query.execute()
+
+            query = (WorkerStatus
+                     .delete()
+                     .where((ScannedLocation.last_modified <
+                             (datetime.utcnow() - timedelta(minutes=30)))))
             query.execute()
 
             # If desired, clear old pokemon spawns
@@ -847,13 +915,13 @@ def bulk_upsert(cls, data):
 def create_tables(db):
     db.connect()
     verify_database_schema(db)
-    db.create_tables([Pokemon, Pokestop, Gym, ScannedLocation, GymDetails, GymMember, GymPokemon, Trainer], safe=True)
+    db.create_tables([Pokemon, Pokestop, Gym, ScannedLocation, GymDetails, GymMember, GymPokemon, Trainer, MainWorker, WorkerStatus], safe=True)
     db.close()
 
 
 def drop_tables(db):
     db.connect()
-    db.drop_tables([Pokemon, Pokestop, Gym, ScannedLocation, Versions, GymDetails, GymMember, GymPokemon, Trainer], safe=True)
+    db.drop_tables([Pokemon, Pokestop, Gym, ScannedLocation, Versions, GymDetails, GymMember, GymPokemon, Trainer, MainWorker, WorkerStatus, Versions], safe=True)
     db.close()
 
 
@@ -926,3 +994,9 @@ def database_migrate(db, old_ver):
         migrate(
             migrator.add_column('gym', 'last_scanned', DateTimeField(null=True)),
         )
+
+    if old_ver < 8:
+        migrate(
+            migrator.drop_not_null('pokemon', 'spawnpoint_id'),
+            migrator.add_column('pokemon', 'pokestop_id', CharField(null=True))
+        )   

@@ -1021,7 +1021,7 @@ function getTypeSpan (type) {
   return `<span style='padding: 2px 5px; text-transform: uppercase; color: white; margin-right: 2px; border-radius: 4px; font-size: 0.8em; vertical-align: text-bottom; background-color: ${type['color']}'>${type['type']}</span>`
 }
 
-function pokemonLabel (name, rarity, types, disappearTime, id, latitude, longitude, encounterId, pokemon) {
+function pokemonLabel (name, rarity, types, disappearTime, id, latitude, longitude, encounterId, pokemon, lured) {
   var disappearDate = new Date(disappearTime)
   var rarityDisplay = rarity ? '(' + rarity + ')' : ''
   var typesDisplay = ''
@@ -1037,6 +1037,7 @@ var details = `
 
 
   var contentstring = `
+    ${lured ? '<div><b>Lured Pokemon</b></div>' : ''}
     <div>
       <b>${name}</b>
       <span> - </span>
@@ -1216,8 +1217,8 @@ function setupPokemonMarker (item, skipNotification, isBounceDisabled) {
 
   var marker = new google.maps.Marker({
     position: {
-      lat: item['latitude'],
-      lng: item['longitude']
+      lat: (item['spawnpoint_id'] !== null) ? item['latitude'] : (item['latitude'] + 0.0001),
+      lng: (item['spawnpoint_id'] !== null) ? item['longitude'] : (item['longitude'] + 0.0001)
     },
     zIndex: 9999,
     map: map,
@@ -1231,7 +1232,7 @@ function setupPokemonMarker (item, skipNotification, isBounceDisabled) {
   })
 
   marker.infoWindow = new google.maps.InfoWindow({
-    content: pokemonLabel(item['pokemon_name'], item['pokemon_rarity'], item['pokemon_types'], item['disappear_time'], item['pokemon_id'], item['latitude'], item['longitude'], item['encounter_id'], item),
+    content: pokemonLabel(item['pokemon_name'], item['pokemon_rarity'], item['pokemon_types'], item['disappear_time'], item['pokemon_id'], item['latitude'], item['longitude'], item['encounter_id'], item, item['spawnpoint_id'] === null),
     disableAutoPan: true
   })
 
