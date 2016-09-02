@@ -32,7 +32,7 @@ module.exports = function(grunt) {
           'static/dist/js/stats.built.js': 'static/js/stats.js',
           'static/dist/js/statistics.built.js': 'static/js/statistics.js',
           'static/dist/js/status.built.js': 'static/js/status.js',
-          'static/dist/js/status.min.js': 'static/js/status.built.js
+          'static/dist/js/status.min.js': 'static/js/status.built.js'
         }
       }
     },
